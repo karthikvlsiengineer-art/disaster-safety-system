@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Emergency SOS
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/style.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>
+        Emergency SOS
+    </h1>
+
+</header>
+
+<nav>
+
+    <a href="/">
+        Home
+    </a>
+
+    <a href="/weather">
+        Weather
+    </a>
+
+    <a href="/route">
+        Safe Route
+    </a>
+
+    <a href="/education">
+        Education
+    </a>
+
+    <a href="/sos">
+        SOS
+    </a>
+
+</nav>
+
+<section class="content emergency-section">
+
+    <h2>
+        Emergency Numbers - India
+    </h2>
+
+    <a
+        class="sos-button"
+        href="tel:112">
+
+        National Emergency - 112
+
+    </a>
+
+    <a
+        class="contact-button"
+        href="tel:100">
+
+        Police - 100
+
+    </a>
+
+    <a
+        class="contact-button"
+        href="tel:101">
+
+        Fire & Rescue - 101
+
+    </a>
+
+    <a
+        class="contact-button"
+        href="tel:+919711077372">
+
+        NDRF Helpline
+
+    </a>
+
+    <div class="info-box">
+
+        <h3>
+            SDRF Information
+        </h3>
+
+        <p>
+            SDRF contact numbers are different
+            for each state. In an immediate
+            emergency, call 112 or use your
+            State Emergency Operations Centre.
+        </p>
+
+    </div>
+
+    <button
+        onclick="showLocation()">
+
+        Show My Location
+
+    </button>
+
+    <div id="locationText"></div>
+
+</section>
+
+<script>
+
+function showLocation() {
+
+    if (!navigator.geolocation) {
+
+        alert(
+            "Geolocation is not supported."
+        );
+
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const latitude =
+                position.coords.latitude;
+
+            const longitude =
+                position.coords.longitude;
+
+            const mapLink =
+                "https://www.google.com/maps?q="
+                + latitude
+                + ","
+                + longitude;
+
+            document
+                .getElementById(
+                    "locationText"
+                )
+                .innerHTML =
+
+                "<p>Latitude: "
+                + latitude
+                + "</p>"
+                + "<p>Longitude: "
+                + longitude
+                + "</p>"
+                + "<a target='_blank' href='"
+                + mapLink
+                + "'>Open Current Location in Google Maps</a>";
+        },
+
+        function() {
+
+            alert(
+                "Unable to access your location."
+            );
+        }
+    );
+}
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Weather Monitoring
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/css/style.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>
+        Weather & Disaster Monitoring
+    </h1>
+
+</header>
+
+<nav>
+
+    <a href="/">
+        Home
+    </a>
+
+    <a href="/weather">
+        Weather
+    </a>
+
+    <a href="/route">
+        Safe Route
+    </a>
+
+    <a href="/education">
+        Education
+    </a>
+
+    <a href="/sos">
+        SOS
+    </a>
+
+</nav>
+
+<section class="content">
+
+    <h2>
+        Check Current Weather
+    </h2>
+
+    <p>
+        Enter coordinates or use your
+        current location.
+    </p>
+
+    <form
+        method="post"
+        action="/weather"
+        class="weather-form">
+
+        <input
+            id="latitude"
+            type="number"
+            step="any"
+            name="latitude"
+            placeholder="Latitude"
+            required>
+
+        <input
+            id="longitude"
+            type="number"
+            step="any"
+            name="longitude"
+            placeholder="Longitude"
+            required>
+
+        <button
+            type="button"
+            onclick="getLocation()">
+
+            Use My Location
+
+        </button>
+
+        <button type="submit">
+
+            Check Weather
+
+        </button>
+
+    </form>
+
+    <p
+        class="error"
+        th:if="${error}"
+        th:text="${error}">
+    </p>
+
+    <div
+        class="weather-result"
+        th:if="${weather != null}">
+
+        <h2>
+            Current Conditions
+        </h2>
+
+        <p>
+            Temperature:
+            <strong
+                th:text="${weather.temperature + ' °C'}">
+            </strong>
+        </p>
+
+        <p>
+            Condition:
+            <strong
+                th:text="${weather.condition}">
+            </strong>
+        </p>
+
+        <p>
+            Humidity:
+            <strong
+                th:text="${weather.humidity + ' %'}">
+            </strong>
+        </p>
+
+        <p>
+            Wind Speed:
+            <strong
+                th:text="${weather.windSpeed + ' km/h'}">
+            </strong>
+        </p>
+
+        <p>
+            Rainfall:
+            <strong
+                th:text="${weather.rainfall + ' mm'}">
+            </strong>
+        </p>
+
+        <p>
+            Rain Probability:
+            <strong
+                th:text="${weather.precipitationProbability + ' %'}">
+            </strong>
+        </p>
+
+        <p>
+            Thunderstorm Probability:
+            <strong
+                th:text="${weather.thunderstormProbability + ' %'}">
+            </strong>
+        </p>
+
+        <h3>
+            Risk Score:
+            <span
+                th:text="${weather.riskScore + '/100'}">
+            </span>
+        </h3>
+
+        <h3>
+            Risk Status:
+            <span
+                th:text="${weather.riskLevel}">
+            </span>
+        </h3>
+
+        <p class="warning">
+            This risk level is a prototype
+            project calculation and is not
+            an official disaster warning.
+        </p>
+
+    </div>
+
+</section>
+
+<script>
+
+function getLocation() {
+
+    if (!navigator.geolocation) {
+
+        alert(
+            "Your browser does not support location services."
+        );
+
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            document
+                .getElementById("latitude")
+                .value =
+                position.coords.latitude;
+
+            document
+                .getElementById("longitude")
+                .value =
+                position.coords.longitude;
+        },
+
+        function() {
+
+            alert(
+                "Unable to access your current location."
+            );
+        }
+    );
+}
+
+</script>
+
+</body>
+
+</html>
