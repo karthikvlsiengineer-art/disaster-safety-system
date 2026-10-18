@@ -1,233 +1,644 @@
-<!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <title>Weather & Disaster Monitoring</title>
 
-    <title>
-        Weather Monitoring
-    </title>
+    <link rel="stylesheet" href="/css/style.css">
 
-    <link
-        rel="stylesheet"
-        href="/css/style.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
+    <style>
+        .weather-hero {
+            text-align: center;
+            padding: 55px 25px;
+            border-radius: 24px;
+            background: linear-gradient(120deg, #0284c7, #2563eb, #7c3aed);
+            color: white;
+            margin-bottom: 35px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .weather-hero h2 {
+            color: white;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            margin: 18px 0;
+        }
+
+        .weather-hero p {
+            color: #e0f2fe;
+        }
+
+        .weather-hero > i {
+            font-size: 55px;
+            color: #fef08a;
+        }
+
+        .search-panel {
+            background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+            padding: 28px;
+            border-radius: 20px;
+            border: 1px solid #c7d2fe;
+            margin-bottom: 30px;
+        }
+
+        .search-panel h2 {
+            margin-top: 0;
+        }
+
+        .weather-form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .field-group label {
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .field-group input {
+            width: 100%;
+            background: white;
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .location-btn {
+            background: linear-gradient(110deg, #059669, #0d9488);
+        }
+
+        .weather-dashboard {
+            margin-top: 35px;
+        }
+
+        .weather-dashboard > h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .weather-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .metric-card {
+            padding: 25px;
+            background: white;
+            border-radius: 19px;
+            border: 1px solid #dbeafe;
+            box-shadow: 0 8px 25px rgba(30, 64, 175, .07);
+            transition: .25s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(30, 64, 175, .14);
+        }
+
+        .metric-icon {
+            width: 55px;
+            height: 55px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card h3 {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 600;
+            margin: 0 0 12px;
+        }
+
+        .metric-value {
+            font-size: 25px;
+            font-weight: 800;
+            color: #172554;
+            overflow-wrap: anywhere;
+        }
+
+        .temperature .metric-icon {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .condition .metric-icon {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .humidity .metric-icon {
+            background: #cffafe;
+            color: #0891b2;
+        }
+
+        .wind .metric-icon {
+            background: #dcfce7;
+            color: #059669;
+        }
+
+        .rainfall .metric-icon {
+            background: #e0e7ff;
+            color: #4f46e5;
+        }
+
+        .rain-prob .metric-icon {
+            background: #f3e8ff;
+            color: #9333ea;
+        }
+
+        .storm .metric-icon {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .risk-panel {
+            margin-top: 35px;
+            padding: 30px;
+            background: linear-gradient(130deg, #f8fafc, #eef2ff);
+            border: 1px solid #c7d2fe;
+            border-radius: 22px;
+        }
+
+        .risk-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .risk-header h2 {
+            margin: 0;
+        }
+
+        .risk-badge {
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-weight: 800;
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .risk-score {
+            font-size: 38px;
+            font-weight: 800;
+            color: #1e40af;
+            margin: 20px 0;
+        }
+
+        .risk-track {
+            height: 17px;
+            background: #e2e8f0;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .risk-fill {
+            height: 100%;
+            width: 0%;
+            background: #2563eb;
+            border-radius: 20px;
+            transition: width .7s ease;
+        }
+
+        .risk-panel.low .risk-fill {
+            background: #16a34a;
+        }
+
+        .risk-panel.moderate .risk-fill {
+            background: #f59e0b;
+        }
+
+        .risk-panel.high .risk-fill,
+        .risk-panel.severe .risk-fill {
+            background: #dc2626;
+        }
+
+        .risk-panel.low .risk-badge {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .risk-panel.moderate .risk-badge {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .risk-panel.high .risk-badge,
+        .risk-panel.severe .risk-badge {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .location-status {
+            font-size: 14px;
+            color: #475569;
+            margin-top: 15px;
+        }
+
+        .weather-note {
+            margin-top: 35px;
+            padding: 22px;
+            border-radius: 16px;
+            background: #fffbeb;
+            border-left: 5px solid #f59e0b;
+            color: #92400e;
+        }
+
+        @media (max-width: 700px) {
+            .weather-form {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-actions button {
+                width: 100%;
+            }
+
+            .search-panel,
+            .risk-panel {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <header>
-
     <h1>
+        <i class="fa-solid fa-cloud-sun-rain"></i>
         Weather & Disaster Monitoring
     </h1>
-
+    <p>Understand the weather. Prepare for possible risks.</p>
 </header>
 
 <nav>
-
     <a href="/">
-        Home
+        <i class="fa-solid fa-house"></i> Home
     </a>
 
-    <a href="/weather">
-        Weather
+    <a href="/weather" class="active">
+        <i class="fa-solid fa-cloud-sun"></i> Weather
     </a>
 
     <a href="/route">
-        Safe Route
+        <i class="fa-solid fa-route"></i> Safe Route
     </a>
 
     <a href="/education">
-        Education
+        <i class="fa-solid fa-book-open"></i> Education
     </a>
 
     <a href="/sos">
-        SOS
+        <i class="fa-solid fa-truck-medical"></i> SOS
     </a>
-
 </nav>
 
-<section class="content">
+<main class="content">
 
-    <h2>
-        Check Current Weather
-    </h2>
+    <section class="weather-hero">
+        <i class="fa-solid fa-cloud-sun"></i>
 
-    <p>
-        Enter coordinates or use your
-        current location.
-    </p>
+        <h2>Smart Weather Monitoring</h2>
 
-    <form
-        method="post"
-        action="/weather"
-        class="weather-form">
+        <p>
+            Explore current weather conditions and
+            view your project's estimated disaster-risk score.
+        </p>
+    </section>
 
-        <input
-            id="latitude"
-            type="number"
-            step="any"
-            name="latitude"
-            placeholder="Latitude"
-            required>
-
-        <input
-            id="longitude"
-            type="number"
-            step="any"
-            name="longitude"
-            placeholder="Longitude"
-            required>
-
-        <button
-            type="button"
-            onclick="getLocation()">
-
-            Use My Location
-
-        </button>
-
-        <button type="submit">
-
-            Check Weather
-
-        </button>
-
-    </form>
-
-    <p
-        class="error"
-        th:if="${error}"
-        th:text="${error}">
-    </p>
-
-    <div
-        class="weather-result"
-        th:if="${weather != null}">
+    <section class="search-panel">
 
         <h2>
-            Current Conditions
+            <i class="fa-solid fa-location-dot"></i>
+            Check Weather by Location
         </h2>
 
         <p>
-            Temperature:
-            <strong
-                th:text="${weather.temperature + ' °C'}">
+            Enter latitude and longitude manually
+            or use your device's location.
+        </p>
+
+        <form method="post"
+              action="/weather"
+              class="weather-form">
+
+            <div class="field-group">
+                <label for="latitude">
+                    <i class="fa-solid fa-location-arrow"></i>
+                    Latitude
+                </label>
+
+                <input id="latitude"
+                       type="number"
+                       step="any"
+                       min="-90"
+                       max="90"
+                       name="latitude"
+                       placeholder="Example: 10.96"
+                       required>
+            </div>
+
+            <div class="field-group">
+                <label for="longitude">
+                    <i class="fa-solid fa-globe"></i>
+                    Longitude
+                </label>
+
+                <input id="longitude"
+                       type="number"
+                       step="any"
+                       min="-180"
+                       max="180"
+                       name="longitude"
+                       placeholder="Example: 78.08"
+                       required>
+            </div>
+
+            <div class="form-actions">
+                <button type="button"
+                        class="location-btn"
+                        onclick="getLocation()">
+                    <i class="fa-solid fa-crosshairs"></i>
+                    Use My Location
+                </button>
+
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Check Weather
+                </button>
+            </div>
+
+        </form>
+
+        <p id="locationStatus"
+           class="location-status"
+           role="status"
+           aria-live="polite"></p>
+
+        <p class="error"
+           th:if="${error}"
+           th:text="${error}">
+        </p>
+
+    </section>
+
+    <section class="weather-dashboard"
+             th:if="${weather != null}">
+
+        <h2>
+            <i class="fa-solid fa-chart-line"></i>
+            Current Weather Conditions
+        </h2>
+
+        <div class="weather-grid">
+
+            <article class="metric-card temperature">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-temperature-half"></i>
+                </div>
+                <h3>Temperature</h3>
+                <div class="metric-value"
+                     th:text="${weather.temperature + ' °C'}">
+                    --
+                </div>
+            </article>
+
+            <article class="metric-card condition">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                </div>
+                <h3>Weather Condition</h3>
+                <div class="metric-value"
+                     th:text="${weather.condition}">
+                    --
+                </div>
+            </article>
+
+            <article class="metric-card humidity">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-droplet"></i>
+                </div>
+                <h3>Humidity</h3>
+                <div class="metric-value"
+                     th:text="${weather.humidity + ' %'}">
+                    --
+                </div>
+            </article>
+
+            <article class="metric-card wind">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-wind"></i>
+                </div>
+                <h3>Wind Speed</h3>
+                <div class="metric-value"
+                     th:text="${weather.windSpeed + ' km/h'}">
+                    --
+                </div>
+            </article>
+
+            <article class="metric-card rainfall">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-cloud-rain"></i>
+                </div>
+                <h3>Rainfall</h3>
+                <div class="metric-value"
+                     th:text="${weather.rainfall + ' mm'}">
+                    --
+                </div>
+            </article>
+
+            <article class="metric-card rain-prob">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-umbrella"></i>
+                </div>
+                <h3>Rain Probability</h3>
+                <div class="metric-value"
+                     th:text="${weather.precipitationProbability + ' %'}">
+                    --
+                </div>
+            </article>
+
+            <article class="metric-card storm">
+                <div class="metric-icon">
+                    <i class="fa-solid fa-cloud-bolt"></i>
+                </div>
+                <h3>Thunderstorm Probability</h3>
+                <div class="metric-value"
+                     th:text="${weather.thunderstormProbability + ' %'}">
+                    --
+                </div>
+            </article>
+
+        </div>
+
+        <section class="risk-panel"
+                 id="riskPanel"
+                 th:attr="data-risk-score=${weather.riskScore},
+                          data-risk-level=${weather.riskLevel}">
+
+            <div class="risk-header">
+                <h2>
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Estimated Disaster Risk
+                </h2>
+
+                <span class="risk-badge"
+                      th:text="${weather.riskLevel}">
+                    Risk Level
+                </span>
+            </div>
+
+            <div class="risk-score"
+                 th:text="${weather.riskScore + ' / 100'}">
+                -- / 100
+            </div>
+
+            <div class="risk-track"
+                 role="progressbar"
+                 aria-label="Estimated risk score"
+                 aria-valuemin="0"
+                 aria-valuemax="100"
+                 aria-valuenow="0"
+                 id="riskTrack">
+                <div class="risk-fill" id="riskFill"></div>
+            </div>
+
+            <p>
+                This score is calculated using your
+                project's weather-risk evaluation logic.
+            </p>
+        </section>
+
+        <div class="weather-note">
+            <strong>
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Important Safety Notice
             </strong>
-        </p>
 
-        <p>
-            Condition:
-            <strong
-                th:text="${weather.condition}">
-            </strong>
-        </p>
+            <p>
+                This is an educational prototype.
+                Its risk score is not an official disaster
+                warning or a verified safety assessment.
+                Always follow alerts from authorised
+                meteorological and disaster-management agencies.
+            </p>
+        </div>
 
-        <p>
-            Humidity:
-            <strong
-                th:text="${weather.humidity + ' %'}">
-            </strong>
-        </p>
+    </section>
 
-        <p>
-            Wind Speed:
-            <strong
-                th:text="${weather.windSpeed + ' km/h'}">
-            </strong>
-        </p>
+</main>
 
-        <p>
-            Rainfall:
-            <strong
-                th:text="${weather.rainfall + ' mm'}">
-            </strong>
-        </p>
-
-        <p>
-            Rain Probability:
-            <strong
-                th:text="${weather.precipitationProbability + ' %'}">
-            </strong>
-        </p>
-
-        <p>
-            Thunderstorm Probability:
-            <strong
-                th:text="${weather.thunderstormProbability + ' %'}">
-            </strong>
-        </p>
-
-        <h3>
-            Risk Score:
-            <span
-                th:text="${weather.riskScore + '/100'}">
-            </span>
-        </h3>
-
-        <h3>
-            Risk Status:
-            <span
-                th:text="${weather.riskLevel}">
-            </span>
-        </h3>
-
-        <p class="warning">
-            This risk level is a prototype
-            project calculation and is not
-            an official disaster warning.
-        </p>
-
-    </div>
-
-</section>
+<footer>
+    <p>
+        <i class="fa-solid fa-shield-heart"></i>
+        Disaster Safety System
+    </p>
+    <p>Weather Awareness • Disaster Preparedness • Safety</p>
+</footer>
 
 <script>
-
 function getLocation() {
+    const status = document.getElementById("locationStatus");
 
     if (!navigator.geolocation) {
-
-        alert(
-            "Your browser does not support location services."
-        );
-
+        status.textContent =
+            "Your browser does not support geolocation.";
         return;
     }
 
+    status.textContent = "Requesting your location...";
+
     navigator.geolocation.getCurrentPosition(
-
         function(position) {
+            document.getElementById("latitude").value =
+                position.coords.latitude.toFixed(6);
 
-            document
-                .getElementById("latitude")
-                .value =
-                position.coords.latitude;
+            document.getElementById("longitude").value =
+                position.coords.longitude.toFixed(6);
 
-            document
-                .getElementById("longitude")
-                .value =
-                position.coords.longitude;
+            status.textContent =
+                "Location coordinates filled successfully. Click Check Weather.";
         },
+        function(error) {
+            const messages = {
+                1: "Location permission was denied.",
+                2: "Your location is currently unavailable.",
+                3: "Location request timed out."
+            };
 
-        function() {
-
-            alert(
-                "Unable to access your current location."
-            );
+            status.textContent =
+                messages[error.code] ||
+                "Unable to access your current location.";
+        },
+        {
+            enableHighAccuracy: false,
+            timeout: 15000,
+            maximumAge: 60000
         }
     );
 }
 
+document.addEventListener("DOMContentLoaded", function() {
+    const panel = document.getElementById("riskPanel");
+    if (!panel) return;
+
+    const score = Number(panel.dataset.riskScore);
+    const level = (panel.dataset.riskLevel || "")
+        .toLowerCase().trim();
+
+    if (Number.isFinite(score)) {
+        const boundedScore = Math.max(0, Math.min(100, score));
+
+        document.getElementById("riskFill").style.width =
+            boundedScore + "%";
+
+        document.getElementById("riskTrack")
+            .setAttribute("aria-valuenow", boundedScore);
+    }
+
+    if (level.includes("low")) {
+        panel.classList.add("low");
+    } else if (level.includes("moderate") ||
+               level.includes("medium")) {
+        panel.classList.add("moderate");
+    } else if (level.includes("high")) {
+        panel.classList.add("high");
+    } else if (level.includes("severe") ||
+               level.includes("extreme")) {
+        panel.classList.add("severe");
+    }
+});
 </script>
 
 </body>
-
 </html>

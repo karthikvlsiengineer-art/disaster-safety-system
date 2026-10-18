@@ -1,150 +1,517 @@
+
 <!DOCTYPE html>
-
-<html xmlns:th="http://www.thymeleaf.org">
-
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <title>Disaster Safety | Smart Protection Platform</title>
 
-    <title>
-        Disaster Safety System
-    </title>
+    <link rel="stylesheet" href="/css/style.css">
 
-    <link
-        rel="stylesheet"
-        href="/css/style.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
+    <style>
+        .brand-header {
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            text-align: left;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            background: rgba(255,255,255,.18);
+            font-size: 27px;
+            flex-shrink: 0;
+        }
+
+        .brand h1 {
+            font-size: 22px;
+            margin: 0 0 5px;
+            letter-spacing: -.4px;
+        }
+
+        .brand p {
+            font-size: 12px;
+            margin: 0;
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 12px 16px;
+            border-radius: 30px;
+            background: rgba(255,255,255,.14);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .header-status i {
+            color: #86efac;
+        }
+
+        .dashboard-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .dashboard-nav a i {
+            margin-right: 7px;
+        }
+
+        .dashboard-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 75px 35px;
+        }
+
+        .hero-label {
+            display: inline-flex;
+            gap: 9px;
+            align-items: center;
+            padding: 9px 16px;
+            border: 1px solid rgba(255,255,255,.3);
+            background: rgba(255,255,255,.13);
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .dashboard-hero h2 {
+            font-size: clamp(2rem, 4.5vw, 3.5rem);
+            line-height: 1.15;
+            margin: 23px auto;
+            max-width: 850px;
+        }
+
+        .dashboard-hero p {
+            max-width: 720px;
+            margin: 0 auto 28px;
+        }
+
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
+            border-radius: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: .25s;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-4px);
+        }
+
+        .hero-btn-primary {
+            background: white;
+            color: #3730a3;
+        }
+
+        .hero-btn-secondary {
+            background: rgba(255,255,255,.14);
+            color: white;
+            border: 1px solid rgba(255,255,255,.45);
+        }
+
+        .section-heading {
+            max-width: 1100px;
+            margin: 55px auto 5px;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .section-heading h2 {
+            font-size: clamp(1.6rem, 3vw, 2.3rem);
+            color: #172554;
+            margin: 0 0 12px;
+        }
+
+        .section-heading p {
+            color: #64748b;
+            line-height: 1.7;
+        }
+
+        .module-card {
+            min-height: 280px;
+        }
+
+        .module-icon {
+            width: 68px;
+            height: 68px;
+            display: grid;
+            place-items: center;
+            border-radius: 20px;
+            font-size: 29px;
+            margin-bottom: 25px;
+        }
+
+        .weather-icon {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .route-icon {
+            background: #ccfbf1;
+            color: #0d9488;
+        }
+
+        .education-icon {
+            background: #f3e8ff;
+            color: #9333ea;
+        }
+
+        .sos-icon {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .module-card h3 {
+            font-size: 19px;
+            margin-bottom: 12px;
+        }
+
+        .module-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            font-weight: 700;
+            color: #4f46e5;
+            margin-top: 15px;
+        }
+
+        .emergency-card .module-link {
+            color: #dc2626;
+        }
+
+        .preparedness {
+            max-width: 1100px;
+            margin: 30px auto 60px;
+            padding: 35px;
+            background: linear-gradient(110deg, #ecfeff, #eef2ff);
+            border: 1px solid #c7d2fe;
+            border-radius: 22px;
+        }
+
+        .preparedness h2 {
+            color: #1e40af;
+            margin-top: 0;
+        }
+
+        .preparedness-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 18px;
+            margin-top: 25px;
+        }
+
+        .tip {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 18px rgba(30,64,175,.06);
+        }
+
+        .tip i {
+            font-size: 25px;
+            color: #4f46e5;
+            margin-bottom: 13px;
+        }
+
+        .tip h3 {
+            font-size: 15px;
+            margin: 5px 0;
+        }
+
+        .tip p {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .dashboard-footer {
+            margin-top: 30px;
+        }
+
+        .dashboard-footer p {
+            margin: 8px;
+        }
+
+        @media (max-width: 700px) {
+            .brand-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .brand {
+                flex-direction: column;
+            }
+
+            .dashboard-hero {
+                padding: 50px 20px;
+            }
+
+            .preparedness {
+                margin: 20px 15px 40px;
+                padding: 22px;
+            }
+
+            .header-status {
+                font-size: 12px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<header>
+<header class="brand-header">
+    <div class="brand">
+        <div class="brand-icon">
+            <i class="fa-solid fa-shield-heart"></i>
+        </div>
+        <div>
+            <h1>Disaster Safety System</h1>
+            <p>Monitoring • Safe Routes • Education • Emergency Response</p>
+        </div>
+    </div>
 
-    <h1>
-        Disaster Monitoring, Safe Route Assistance
-        and Educational System
-    </h1>
-
-    <p>
-        Stay informed. Choose the safer path.
-        Be prepared.
-    </p>
-
+    <div class="header-status">
+        <i class="fa-solid fa-circle-check"></i>
+        Safety Resources Available
+    </div>
 </header>
 
-<nav>
-
-    <a href="/">
-        Home
+<nav class="dashboard-nav">
+    <a href="/" class="active">
+        <i class="fa-solid fa-house"></i> Home
     </a>
 
     <a href="/weather">
-        Weather & Disaster
+        <i class="fa-solid fa-cloud-sun-rain"></i> Weather
     </a>
 
     <a href="/route">
-        Safe Route
+        <i class="fa-solid fa-route"></i> Safe Route
     </a>
 
     <a href="/education">
-        Education
+        <i class="fa-solid fa-book-open-reader"></i> Education
     </a>
 
     <a href="/sos">
-        SOS
+        <i class="fa-solid fa-truck-medical"></i> SOS
     </a>
-
 </nav>
 
-<section class="hero">
+<main>
 
-    <h2>
-        Smart Disaster Safety Platform
-    </h2>
+    <section class="hero dashboard-hero">
+        <span class="hero-label">
+            <i class="fa-solid fa-shield-halved"></i>
+            SMART DISASTER PREPAREDNESS
+        </span>
 
+        <h2>
+            Stay Alert. Stay Prepared.
+            Stay Safe.
+        </h2>
+
+        <p>
+            Your all-in-one disaster safety companion.
+            Explore weather information, compare alternative
+            routes, learn essential safety measures and
+            access emergency resources in one place.
+        </p>
+
+        <div class="hero-actions">
+            <a href="/weather"
+               class="hero-btn hero-btn-primary">
+                <i class="fa-solid fa-cloud-bolt"></i>
+                Explore Weather
+            </a>
+
+            <a href="/sos"
+               class="hero-btn hero-btn-secondary">
+                <i class="fa-solid fa-phone-volume"></i>
+                Emergency Assistance
+            </a>
+        </div>
+    </section>
+
+    <section class="section-heading">
+        <h2>Explore Our Safety Modules</h2>
+        <p>
+            Everything you need for better disaster awareness,
+            preparedness and emergency planning.
+        </p>
+    </section>
+
+    <section class="cards">
+
+        <a class="card module-card" href="/weather">
+            <div class="module-icon weather-icon">
+                <i class="fa-solid fa-cloud-sun-rain"></i>
+            </div>
+
+            <h3>Weather & Disaster Monitoring</h3>
+
+            <p>
+                Explore weather conditions and view
+                available disaster-risk information.
+            </p>
+
+            <span class="module-link">
+                Explore Weather
+                <i class="fa-solid fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <a class="card module-card" href="/route">
+            <div class="module-icon route-icon">
+                <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+
+            <h3>Safe Route Assistance</h3>
+
+            <p>
+                Explore alternate routes and compare
+                available route-risk information.
+            </p>
+
+            <span class="module-link">
+                Find a Route
+                <i class="fa-solid fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <a class="card module-card" href="/education">
+            <div class="module-icon education-icon">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+
+            <h3>Disaster Education & Quiz</h3>
+
+            <p>
+                Learn essential safety practices and
+                test your knowledge with 30 quiz questions.
+            </p>
+
+            <span class="module-link">
+                Start Learning
+                <i class="fa-solid fa-arrow-right"></i>
+            </span>
+        </a>
+
+        <a class="card module-card emergency-card" href="/sos">
+            <div class="module-icon sos-icon">
+                <i class="fa-solid fa-kit-medical"></i>
+            </div>
+
+            <h3>Emergency SOS</h3>
+
+            <p>
+                Access emergency contacts and
+                available location assistance tools.
+            </p>
+
+            <span class="module-link">
+                Emergency Help
+                <i class="fa-solid fa-arrow-right"></i>
+            </span>
+        </a>
+
+    </section>
+
+    <section class="preparedness">
+        <h2>
+            <i class="fa-solid fa-lightbulb"></i>
+            Be Prepared Before Disaster Strikes
+        </h2>
+
+        <p>
+            Simple precautions can make a significant
+            difference during an emergency.
+        </p>
+
+        <div class="preparedness-grid">
+
+            <div class="tip">
+                <i class="fa-solid fa-suitcase-medical"></i>
+                <h3>Emergency Kit</h3>
+                <p>
+                    Keep water, food, medicines,
+                    a torch and first aid supplies ready.
+                </p>
+            </div>
+
+            <div class="tip">
+                <i class="fa-solid fa-people-roof"></i>
+                <h3>Family Safety Plan</h3>
+                <p>
+                    Identify evacuation routes,
+                    meeting points and emergency contacts.
+                </p>
+            </div>
+
+            <div class="tip">
+                <i class="fa-solid fa-bell"></i>
+                <h3>Follow Official Alerts</h3>
+                <p>
+                    Check verified government
+                    warnings and emergency instructions.
+                </p>
+            </div>
+
+            <div class="tip">
+                <i class="fa-solid fa-phone"></i>
+                <h3>Emergency Number</h3>
+                <p>
+                    In India, dial 112 for
+                    emergency response assistance.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<footer class="dashboard-footer">
     <p>
-        Monitor weather conditions,
-        identify possible risks,
-        compare alternate routes and
-        learn emergency preparedness.
+        <i class="fa-solid fa-shield-heart"></i>
+        Disaster Monitoring, Safe Route Assistance
+        and Educational System
     </p>
-
-</section>
-
-<section class="cards">
-
-    <a
-        class="card"
-        href="/weather">
-
-        <h2>
-            Weather & Disaster Monitoring
-        </h2>
-
-        <p>
-            Check weather conditions and
-            analyse possible disaster risk.
-        </p>
-
-    </a>
-
-    <a
-        class="card"
-        href="/route">
-
-        <h2>
-            Safe Route Finder
-        </h2>
-
-        <p>
-            Compare routes and identify a
-            lower-risk route.
-        </p>
-
-    </a>
-
-    <a
-        class="card"
-        href="/education">
-
-        <h2>
-            Disaster Education
-        </h2>
-
-        <p>
-            Learn about floods, cyclones,
-            earthquakes and take quizzes.
-        </p>
-
-    </a>
-
-    <a
-        class="card emergency-card"
-        href="/sos">
-
-        <h2>
-            Emergency SOS
-        </h2>
-
-        <p>
-            Access emergency numbers and
-            location assistance.
-        </p>
-
-    </a>
-
-</section>
-
-<footer>
-
-    Disaster Safety System
-
+    <p>
+        Built for awareness, preparedness and safety.
+    </p>
 </footer>
 
 </body>
-
 </html>

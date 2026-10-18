@@ -1,180 +1,581 @@
-<!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <title>Emergency SOS | Disaster Safety System</title>
 
-    <title>
-        Emergency SOS
-    </title>
+    <link rel="stylesheet" href="/css/style.css">
 
-    <link
-        rel="stylesheet"
-        href="/css/style.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
+    <style>
+        .sos-hero {
+            text-align: center;
+            padding: 55px 25px;
+            background: linear-gradient(120deg,#b91c1c,#ef4444,#f97316);
+            border-radius: 24px;
+            color: white;
+            margin-bottom: 35px;
+        }
+
+        .sos-hero > i {
+            font-size: 55px;
+        }
+
+        .sos-hero h2 {
+            color: white;
+            font-size: clamp(1.8rem,4vw,2.8rem);
+            margin: 20px 0;
+        }
+
+        .sos-hero p {
+            color: #fff7ed;
+        }
+
+        .emergency-main {
+            text-align: center;
+            padding: 35px;
+            background: linear-gradient(135deg,#fff1f2,#fff7ed);
+            border: 2px solid #fecaca;
+            border-radius: 22px;
+            margin-bottom: 35px;
+        }
+
+        .emergency-main h2 {
+            color: #b91c1c;
+        }
+
+        .emergency-main p {
+            color: #7f1d1d;
+        }
+
+        .main-call-btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 22px 35px;
+            margin-top: 15px;
+            border-radius: 16px;
+            background: linear-gradient(110deg,#dc2626,#f43f5e);
+            color: white;
+            text-decoration: none;
+            font-size: 23px;
+            font-weight: 800;
+            box-shadow: 0 10px 28px rgba(220,38,38,.25);
+            transition: .25s;
+        }
+
+        .main-call-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(220,38,38,.35);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+            gap: 20px;
+            margin: 25px 0 35px;
+        }
+
+        .contact-card {
+            text-align: center;
+            background: white;
+            padding: 28px 20px;
+            border: 1px solid #dbeafe;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(30,64,175,.07);
+            transition: .25s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 30px rgba(30,64,175,.13);
+        }
+
+        .contact-icon {
+            width: 65px;
+            height: 65px;
+            margin: 0 auto 20px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            font-size: 28px;
+        }
+
+        .police-icon {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .fire-icon {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .ndrf-icon {
+            background: #dcfce7;
+            color: #059669;
+        }
+
+        .contact-card h3 {
+            color: #172554;
+            margin: 10px 0;
+        }
+
+        .contact-card p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .contact-number {
+            font-size: 21px;
+            font-weight: 800;
+            color: #334155;
+            margin: 12px 0;
+            overflow-wrap: anywhere;
+        }
+
+        .call-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 13px 22px;
+            border-radius: 12px;
+            background: linear-gradient(110deg,#2563eb,#4f46e5);
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .fire-btn {
+            background: linear-gradient(110deg,#ea580c,#f97316);
+        }
+
+        .ndrf-btn {
+            background: linear-gradient(110deg,#059669,#0d9488);
+        }
+
+        .location-panel {
+            padding: 32px;
+            background: linear-gradient(135deg,#ecfeff,#eef2ff);
+            border: 1px solid #bfdbfe;
+            border-radius: 22px;
+            margin: 35px 0;
+            text-align: center;
+        }
+
+        .location-panel > i {
+            font-size: 42px;
+            color: #2563eb;
+        }
+
+        .location-panel h2 {
+            margin-top: 20px;
+        }
+
+        .location-panel p {
+            color: #475569;
+        }
+
+        .location-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .location-btn {
+            background: linear-gradient(110deg,#059669,#0d9488);
+        }
+
+        .share-btn {
+            background: linear-gradient(110deg,#7c3aed,#a855f7);
+        }
+
+        .location-result {
+            display: none;
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-top: 22px;
+            border: 1px solid #c7d2fe;
+            overflow-wrap: anywhere;
+        }
+
+        .map-link {
+            display: inline-flex;
+            gap: 9px;
+            align-items: center;
+            margin-top: 15px;
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        .sdrf-panel {
+            padding: 25px;
+            background: #f5f3ff;
+            border-left: 5px solid #8b5cf6;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .sdrf-panel h2 {
+            color: #6d28d9;
+        }
+
+        .safety-notice {
+            padding: 22px;
+            border-left: 5px solid #f59e0b;
+            background: #fffbeb;
+            border-radius: 14px;
+            color: #92400e;
+            margin-top: 30px;
+        }
+
+        @media(max-width:700px) {
+            .emergency-main,
+            .location-panel {
+                padding: 22px;
+            }
+
+            .main-call-btn {
+                font-size: 19px;
+                padding: 18px;
+            }
+
+            .location-actions {
+                flex-direction: column;
+            }
+
+            .location-actions button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <header>
-
     <h1>
+        <i class="fa-solid fa-truck-medical"></i>
         Emergency SOS
     </h1>
 
+    <p>Emergency Contacts • Location Assistance • Preparedness</p>
 </header>
 
 <nav>
-
     <a href="/">
-        Home
+        <i class="fa-solid fa-house"></i> Home
     </a>
 
     <a href="/weather">
-        Weather
+        <i class="fa-solid fa-cloud-sun"></i> Weather
     </a>
 
     <a href="/route">
-        Safe Route
+        <i class="fa-solid fa-route"></i> Safe Route
     </a>
 
     <a href="/education">
-        Education
+        <i class="fa-solid fa-book-open"></i> Education
     </a>
 
-    <a href="/sos">
-        SOS
+    <a href="/sos" class="active">
+        <i class="fa-solid fa-truck-medical"></i> SOS
     </a>
-
 </nav>
 
-<section class="content emergency-section">
+<main class="content">
 
-    <h2>
-        Emergency Numbers - India
-    </h2>
+    <section class="sos-hero">
+        <i class="fa-solid fa-shield-heart"></i>
 
-    <a
-        class="sos-button"
-        href="tel:112">
-
-        National Emergency - 112
-
-    </a>
-
-    <a
-        class="contact-button"
-        href="tel:100">
-
-        Police - 100
-
-    </a>
-
-    <a
-        class="contact-button"
-        href="tel:101">
-
-        Fire & Rescue - 101
-
-    </a>
-
-    <a
-        class="contact-button"
-        href="tel:+919711077372">
-
-        NDRF Helpline
-
-    </a>
-
-    <div class="info-box">
-
-        <h3>
-            SDRF Information
-        </h3>
+        <h2>Emergency Response Centre</h2>
 
         <p>
-            SDRF contact numbers are different
-            for each state. In an immediate
-            emergency, call 112 or use your
-            State Emergency Operations Centre.
+            Quickly access emergency numbers and
+            locate your position when assistance is needed.
         </p>
+    </section>
+
+    <section class="emergency-main">
+        <i class="fa-solid fa-siren-on"
+           style="font-size:42px;color:#dc2626"></i>
+
+        <h2>Need Emergency Assistance?</h2>
+
+        <p>
+            In India, dial 112 for integrated
+            emergency response assistance.
+        </p>
+
+        <a href="tel:112" class="main-call-btn">
+            <i class="fa-solid fa-phone-volume"></i>
+            Call 112
+        </a>
+
+        <p style="font-size:13px;margin-top:18px">
+            On supported devices, tapping this button
+            opens the phone dialler.
+        </p>
+    </section>
+
+    <h2>
+        <i class="fa-solid fa-address-book"></i>
+        Emergency Contact Directory
+    </h2>
+
+    <div class="contact-grid">
+
+        <article class="contact-card">
+            <div class="contact-icon police-icon">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+
+            <h3>Police Assistance</h3>
+            <p>Emergency police support</p>
+
+            <div class="contact-number">100</div>
+
+            <a href="tel:100" class="call-btn">
+                <i class="fa-solid fa-phone"></i>
+                Call Police
+            </a>
+        </article>
+
+        <article class="contact-card">
+            <div class="contact-icon fire-icon">
+                <i class="fa-solid fa-fire-extinguisher"></i>
+            </div>
+
+            <h3>Fire & Rescue</h3>
+            <p>Fire and rescue assistance</p>
+
+            <div class="contact-number">101</div>
+
+            <a href="tel:101" class="call-btn fire-btn">
+                <i class="fa-solid fa-phone"></i>
+                Call Fire Service
+            </a>
+        </article>
+
+        <article class="contact-card">
+            <div class="contact-icon ndrf-icon">
+                <i class="fa-solid fa-helmet-safety"></i>
+            </div>
+
+            <h3>NDRF Helpline</h3>
+            <p>Disaster response assistance</p>
+
+            <div class="contact-number">+91 97110 77372</div>
+
+            <a href="tel:+919711077372"
+               class="call-btn ndrf-btn">
+                <i class="fa-solid fa-phone"></i>
+                Call NDRF
+            </a>
+        </article>
 
     </div>
 
-    <button
-        onclick="showLocation()">
+    <section class="location-panel">
 
-        Show My Location
+        <i class="fa-solid fa-location-crosshairs"></i>
 
-    </button>
+        <h2>My Emergency Location</h2>
 
-    <div id="locationText"></div>
+        <p>
+            Retrieve your device coordinates and
+            generate a Google Maps link that you can
+            share with a trusted contact.
+        </p>
 
-</section>
+        <div class="location-actions">
+            <button type="button"
+                    class="location-btn"
+                    onclick="showLocation()">
+                <i class="fa-solid fa-location-dot"></i>
+                Show My Location
+            </button>
+
+            <button type="button"
+                    class="share-btn"
+                    onclick="shareLocation()">
+                <i class="fa-solid fa-share-nodes"></i>
+                Share Location
+            </button>
+        </div>
+
+        <p id="locationStatus"
+           role="status"
+           aria-live="polite"></p>
+
+        <div id="locationText"
+             class="location-result">
+        </div>
+
+    </section>
+
+    <section class="sdrf-panel">
+        <h2>
+            <i class="fa-solid fa-people-group"></i>
+            State Disaster Response Force (SDRF)
+        </h2>
+
+        <p>
+            SDRF contact details differ by state.
+            Refer to your State Emergency Operations
+            Centre for local disaster response assistance.
+        </p>
+
+        <p>
+            For an immediate emergency in India,
+            call <strong>112</strong>.
+        </p>
+    </section>
+
+    <div class="safety-notice">
+        <strong>
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Important Notice
+        </strong>
+
+        <p>
+            This website is an educational project,
+            not an emergency dispatch service.
+            It does not automatically contact police,
+            rescue teams, or emergency authorities.
+            Call the appropriate emergency number directly.
+        </p>
+    </div>
+
+</main>
+
+<footer>
+    <p>
+        <i class="fa-solid fa-shield-heart"></i>
+        Disaster Safety System
+    </p>
+
+    <p>Emergency Awareness • Assistance • Preparedness</p>
+</footer>
 
 <script>
+let currentLocationLink = "";
 
 function showLocation() {
+    const status = document.getElementById("locationStatus");
+    const result = document.getElementById("locationText");
 
     if (!navigator.geolocation) {
-
-        alert(
-            "Geolocation is not supported."
-        );
-
+        status.textContent =
+            "Geolocation is not supported by this browser.";
         return;
     }
 
+    status.textContent = "Requesting location permission...";
+
     navigator.geolocation.getCurrentPosition(
-
         function(position) {
+            const latitude = position.coords.latitude.toFixed(6);
+            const longitude = position.coords.longitude.toFixed(6);
 
-            const latitude =
-                position.coords.latitude;
+            currentLocationLink =
+                "https://www.google.com/maps?q=" +
+                latitude + "," + longitude;
 
-            const longitude =
-                position.coords.longitude;
+            result.replaceChildren();
 
-            const mapLink =
-                "https://www.google.com/maps?q="
-                + latitude
-                + ","
-                + longitude;
+            const heading = document.createElement("h3");
+            heading.textContent = "Location Retrieved";
 
-            document
-                .getElementById(
-                    "locationText"
-                )
-                .innerHTML =
+            const lat = document.createElement("p");
+            lat.textContent = "Latitude: " + latitude;
 
-                "<p>Latitude: "
-                + latitude
-                + "</p>"
-                + "<p>Longitude: "
-                + longitude
-                + "</p>"
-                + "<a target='_blank' href='"
-                + mapLink
-                + "'>Open Current Location in Google Maps</a>";
+            const lon = document.createElement("p");
+            lon.textContent = "Longitude: " + longitude;
+
+            const link = document.createElement("a");
+            link.href = currentLocationLink;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            link.className = "map-link";
+            link.textContent = "Open Location in Google Maps";
+
+            result.append(heading, lat, lon, link);
+            result.style.display = "block";
+
+            status.textContent =
+                "Location retrieved. You can now share it.";
         },
+        function(error) {
+            const messages = {
+                1: "Location permission denied.",
+                2: "Location information unavailable.",
+                3: "Location request timed out."
+            };
 
-        function() {
-
-            alert(
-                "Unable to access your location."
-            );
+            status.textContent =
+                messages[error.code] ||
+                "Unable to retrieve location.";
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
         }
     );
 }
 
+async function shareLocation() {
+    const status = document.getElementById("locationStatus");
+
+    if (!currentLocationLink) {
+        status.textContent =
+            "First click Show My Location to retrieve coordinates.";
+        return;
+    }
+
+    try {
+        if (navigator.share) {
+            await navigator.share({
+                title: "My Emergency Location",
+                text: "My current location:",
+                url: currentLocationLink
+            });
+
+            status.textContent = "Location sharing completed.";
+        } else if (navigator.clipboard &&
+                   window.isSecureContext) {
+            await navigator.clipboard.writeText(currentLocationLink);
+            status.textContent =
+                "Location link copied. Share it with a trusted contact.";
+        } else {
+            status.textContent =
+                "Open the Google Maps link above and copy its address.";
+        }
+    } catch (error) {
+        if (error.name === "AbortError") {
+            status.textContent = "Sharing was cancelled.";
+        } else {
+            status.textContent =
+                "Unable to share automatically. Copy the Maps link manually.";
+        }
+    }
+}
 </script>
 
 </body>
-
 </html>

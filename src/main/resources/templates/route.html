@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -7,63 +8,436 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Safe Route Finder</title>
+    <title>Safe Route Assistance | Disaster Safety</title>
+
+    <link rel="stylesheet" href="/css/style.css">
 
     <link rel="stylesheet"
-          href="/css/style.css">
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <link rel="stylesheet"
           href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <style>
+        .route-hero {
+            text-align: center;
+            padding: 55px 25px;
+            border-radius: 24px;
+            background: linear-gradient(120deg,#0d9488,#2563eb,#7c3aed);
+            color: white;
+            margin-bottom: 35px;
+        }
+
+        .route-hero > i {
+            font-size: 52px;
+            color: #ccfbf1;
+        }
+
+        .route-hero h2 {
+            color: white;
+            font-size: clamp(1.8rem,4vw,2.8rem);
+            margin: 20px 0 12px;
+        }
+
+        .route-hero p {
+            color: #e0f2fe;
+            max-width: 680px;
+            margin: auto;
+        }
+
+        .route-search-panel {
+            padding: 30px;
+            background: linear-gradient(135deg,#eff6ff,#f0fdfa);
+            border: 1px solid #bfdbfe;
+            border-radius: 22px;
+            margin-bottom: 30px;
+        }
+
+        .route-search-panel h2 {
+            margin-top: 0;
+        }
+
+        .route-input {
+            display: grid;
+            grid-template-columns: repeat(2,minmax(0,1fr));
+            gap: 20px;
+        }
+
+        .route-field {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .route-field label {
+            color: #334155;
+            font-weight: 700;
+        }
+
+        .route-field label i {
+            margin-right: 8px;
+            color: #4f46e5;
+        }
+
+        .route-field input {
+            width: 100%;
+            padding: 16px;
+            background: white;
+        }
+
+        .route-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .location-btn {
+            background: linear-gradient(110deg,#059669,#0d9488);
+        }
+
+        .find-btn {
+            background: linear-gradient(110deg,#2563eb,#7c3aed);
+        }
+
+        .route-actions button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .route-map-panel {
+            background: white;
+            border: 1px solid #dbeafe;
+            border-radius: 22px;
+            padding: 22px;
+            box-shadow: 0 10px 28px rgba(30,64,175,.08);
+        }
+
+        .map-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .map-heading h2 {
+            margin: 0;
+        }
+
+        .map-label {
+            padding: 9px 14px;
+            background: #dcfce7;
+            color: #166534;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        #map {
+            width: 100%;
+            height: 540px;
+            margin-top: 22px;
+            border-radius: 17px;
+            border: 2px solid #dbeafe;
+            z-index: 0;
+        }
+
+        .route-results-panel {
+            margin-top: 30px;
+        }
+
+        .route-results-panel h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #routeResults {
+            background: linear-gradient(135deg,#ecfeff,#eef2ff);
+            border: 1px solid #c7d2fe;
+            border-radius: 18px;
+            padding: 25px;
+            min-height: 90px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .route-notice {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            margin-top: 30px;
+            padding: 22px;
+            background: #fffbeb;
+            border-left: 5px solid #f59e0b;
+            border-radius: 15px;
+            color: #92400e;
+        }
+
+        .route-notice i {
+            font-size: 23px;
+            margin-top: 5px;
+        }
+
+        .route-notice p {
+            margin: 0;
+        }
+
+        .route-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+            gap: 18px;
+            margin-top: 30px;
+        }
+
+        .route-feature {
+            padding: 22px;
+            border: 1px solid #e0e7ff;
+            border-radius: 17px;
+            background: #f8faff;
+            text-align: center;
+        }
+
+        .route-feature i {
+            font-size: 28px;
+            color: #4f46e5;
+            margin-bottom: 12px;
+        }
+
+        .route-feature h3 {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .route-feature p {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        #routeStatus {
+            color: #475569;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        @media(max-width:700px) {
+            .route-input {
+                grid-template-columns: 1fr;
+            }
+
+            .route-actions {
+                flex-direction: column;
+            }
+
+            .route-actions button {
+                width: 100%;
+            }
+
+            .route-search-panel {
+                padding: 20px;
+            }
+
+            .route-map-panel {
+                padding: 14px;
+            }
+
+            #map {
+                height: 390px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <header>
-    <h1>Safe Route Finder</h1>
+    <h1>
+        <i class="fa-solid fa-map-location-dot"></i>
+        Safe Route Assistance
+    </h1>
+    <p>Explore alternative routes. Make informed travel decisions.</p>
 </header>
 
 <nav>
-    <a href="/">Home</a>
-    <a href="/weather">Weather</a>
-    <a href="/route">Safe Route</a>
-    <a href="/education">Education</a>
-    <a href="/sos">SOS</a>
+    <a href="/">
+        <i class="fa-solid fa-house"></i> Home
+    </a>
+
+    <a href="/weather">
+        <i class="fa-solid fa-cloud-sun"></i> Weather
+    </a>
+
+    <a href="/route" class="active">
+        <i class="fa-solid fa-route"></i> Safe Route
+    </a>
+
+    <a href="/education">
+        <i class="fa-solid fa-book-open"></i> Education
+    </a>
+
+    <a href="/sos">
+        <i class="fa-solid fa-truck-medical"></i> SOS
+    </a>
 </nav>
 
-<section class="content">
+<main class="content">
 
-    <h2>Find a Safer Route</h2>
+    <section class="route-hero">
+        <i class="fa-solid fa-route"></i>
 
-    <div class="route-input">
+        <h2>Smart Route Exploration</h2>
 
-        <input id="origin"
-               type="text"
-               placeholder="Starting location">
+        <p>
+            Enter your starting point and destination
+            to explore available routes using our
+            interactive mapping system.
+        </p>
+    </section>
 
-        <input id="destination"
-               type="text"
-               placeholder="Destination">
+    <section class="route-search-panel">
 
-        <button onclick="useMyLocation()">
-            Use My Location
-        </button>
+        <h2>
+            <i class="fa-solid fa-magnifying-glass-location"></i>
+            Plan Your Journey
+        </h2>
 
-        <button onclick="findSafeRoute()">
-            Find Safer Route
-        </button>
+        <p>
+            Search using place names or use your
+            current location as the starting point.
+        </p>
 
+        <div class="route-input">
+
+            <div class="route-field">
+                <label for="origin">
+                    <i class="fa-solid fa-location-dot"></i>
+                    Starting Location
+                </label>
+
+                <input id="origin"
+                       type="text"
+                       placeholder="Enter starting location"
+                       autocomplete="street-address">
+            </div>
+
+            <div class="route-field">
+                <label for="destination">
+                    <i class="fa-solid fa-flag-checkered"></i>
+                    Destination
+                </label>
+
+                <input id="destination"
+                       type="text"
+                       placeholder="Enter destination">
+            </div>
+
+            <div class="route-actions">
+                <button type="button"
+                        class="location-btn"
+                        onclick="useMyLocation()">
+                    <i class="fa-solid fa-crosshairs"></i>
+                    Use My Location
+                </button>
+
+                <button type="button"
+                        class="find-btn"
+                        onclick="findSafeRoute()">
+                    <i class="fa-solid fa-route"></i>
+                    Find Safer Route
+                </button>
+            </div>
+
+        </div>
+
+        <p id="routeStatus"
+           role="status"
+           aria-live="polite"></p>
+
+    </section>
+
+    <section class="route-map-panel">
+
+        <div class="map-heading">
+            <h2>
+                <i class="fa-solid fa-map"></i>
+                Interactive Route Map
+            </h2>
+
+            <span class="map-label">
+                <i class="fa-solid fa-layer-group"></i>
+                Leaflet Map
+            </span>
+        </div>
+
+        <div id="map"
+             aria-label="Interactive route map"></div>
+
+    </section>
+
+    <section class="route-results-panel">
+
+        <h2>
+            <i class="fa-solid fa-list-check"></i>
+            Route Information
+        </h2>
+
+        <div id="routeResults"
+             class="route-results"
+             aria-live="polite">
+            Enter your starting point and destination
+            to explore available routes.
+        </div>
+
+    </section>
+
+    <section class="route-features">
+
+        <article class="route-feature">
+            <i class="fa-solid fa-map-marked-alt"></i>
+            <h3>Interactive Maps</h3>
+            <p>Explore roads and locations visually.</p>
+        </article>
+
+        <article class="route-feature">
+            <i class="fa-solid fa-route"></i>
+            <h3>Route Comparison</h3>
+            <p>View alternative routes when available.</p>
+        </article>
+
+        <article class="route-feature">
+            <i class="fa-solid fa-location-crosshairs"></i>
+            <h3>Location Assistance</h3>
+            <p>Use your device location with permission.</p>
+        </article>
+
+    </section>
+
+    <div class="route-notice">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+
+        <p>
+            <strong>Safety Notice:</strong>
+            This is a prototype route-planning system.
+            Displayed routes are not verified as safe
+            during floods, landslides, road closures,
+            or other disasters. Always follow official
+            evacuation instructions and local authorities.
+        </p>
     </div>
 
-    <div id="map"></div>
+</main>
 
-    <div id="routeResults"
-         class="route-results">
+<footer>
+    <p>
+        <i class="fa-solid fa-shield-heart"></i>
+        Disaster Safety System
+    </p>
 
-        Enter source and destination.
-
-    </div>
-
-</section>
+    <p>Navigation • Awareness • Preparedness</p>
+</footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
